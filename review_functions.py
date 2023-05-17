@@ -5,31 +5,33 @@ def create_url(place_id,token=""):
     url = "https://www.google.com/async/reviewDialog?hl=en_us&async=feature_id:" + place_id + ",next_page_token:" + token + ",sort_by:qualityScore,start_index:,associated_topic:,_fmt:pc"
     return url
 
-
-def get_reviews(url,page):
-
+def get_site(url):
     response = requests.get(url)
-    soup = bs4.BeautifulSoup(response.content,'html.parser')
-    user = []
+    soup = bs4.BeautifulSoup(response.content, 'html.parser')
+    return soup
+
+
+
+def get_location_info(soup):
     location_info = {}
-    data_id = ''
+
+    for el in soup.select('.lcorif'):
+        data_id = soup.select_one('.loris')['data-fid']
+        token = soup.select_one('.gws-localreviews__general-reviews-block')['data-next-page-token']
+        location_info = {
+            'title': soup.select_one('.P5Bobd').text.strip(),
+            'address': soup.select_one('.T6pBCe').text.strip(),
+            'avgRating': soup.select_one('span.Aq14fc').text.strip(),
+            'totalReviews': soup.select_one('span.z5jxId').text.strip()
+        }
+    return location_info
+
+
+def get_reviews(soup):
+    user = []
     token = ''
     total_reviews = 0
     local_reviews = 0
-    if page == 1:
-        for el in soup.select('.lcorif'):
-            data_id = soup.select_one('.loris')['data-fid']
-            token = soup.select_one('.gws-localreviews__general-reviews-block')['data-next-page-token']
-            location_info = {
-               'title': soup.select_one('.P5Bobd').text.strip(),
-               'address': soup.select_one('.T6pBCe').text.strip(),
-               'avgRating': soup.select_one('span.Aq14fc').text.strip(),
-               'totalReviews': soup.select_one('span.z5jxId').text.strip()
-            }
-    else:
-        for el in soup.select('.lcorif'):
-            data_id = soup.select_one('.loris')['data-fid']
-            token = soup.select_one('.gws-localreviews__general-reviews-block')['data-next-page-token']
 
     for el in soup.select('.gws-localreviews__google-review'):
         total_reviews += 1

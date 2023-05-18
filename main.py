@@ -1,13 +1,15 @@
 from fastapi import FastAPI, HTTPException
 from review_functions import create_url, get_reviews, get_site, get_location_info
-
-
-
-
-
-#place_id = "0x60188cf2ebd0b05b:0x95294f4eb1559d4e"
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins = ['*'],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get('/{p_id}')
 def get_review_score(p_id: str):

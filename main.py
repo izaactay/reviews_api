@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from review_functions import create_url, get_reviews, get_site, get_location_info
 
 
@@ -11,6 +11,8 @@ app = FastAPI()
 
 @app.get('/{p_id}')
 def get_review_score(p_id: str):
+    if p_id == "favicon.ico":
+        raise HTTPException(status_code=404, detail="Place not found")
     next_page_token = ""
     url = create_url(p_id, next_page_token)
     soup = get_site(url)
@@ -24,8 +26,10 @@ def get_review_score(p_id: str):
         total_reviews += temp_total
         local_reviews += temp_local
         count += 1
-
-    print(location_info['title'])
+    try:
+        print(location_info['title'])
+    except:
+        print('no title')
     return (local_reviews/total_reviews)*100
 
 

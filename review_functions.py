@@ -13,12 +13,8 @@ def get_site(url):
 
 
 def get_location_info(soup):
-    location_info = {}
 
-    for el in soup.select('.lcorif'):
-        data_id = soup.select_one('.loris')['data-fid']
-        token = soup.select_one('.gws-localreviews__general-reviews-block')['data-next-page-token']
-        location_info = {
+    location_info = {
             'title': soup.select_one('.P5Bobd').text.strip(),
             'address': soup.select_one('.T6pBCe').text.strip(),
             'avgRating': soup.select_one('span.Aq14fc').text.strip(),

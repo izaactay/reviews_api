@@ -13,13 +13,14 @@ def get_site(url):
 
 
 def get_location_info(soup):
-
-    location_info = {
-            'title': soup.select_one('.P5Bobd').text.strip(),
-            'address': soup.select_one('.T6pBCe').text.strip(),
-            'avgRating': soup.select_one('span.Aq14fc').text.strip(),
-            'totalReviews': soup.select_one('span.z5jxId').text.strip()
-        }
+    location_info = {}
+    for el in soup.select('.lcorif'):
+        location_info = {
+                'title': soup.select_one('.P5Bobd').text.strip(),
+                'address': soup.select_one('.T6pBCe').text.strip(),
+                'avgRating': soup.select_one('span.Aq14fc').text.strip(),
+                'totalReviews': soup.select_one('span.z5jxId').text.strip()
+            }
     return location_info
 
 
@@ -28,6 +29,9 @@ def get_reviews(soup):
     token = ''
     total_reviews = 0
     local_reviews = 0
+
+    for el in soup.select('.lcorif'):
+        token = soup.select_one('.gws-localreviews__general-reviews-block')['data-next-page-token']
 
     for el in soup.select('.gws-localreviews__google-review'):
         total_reviews += 1

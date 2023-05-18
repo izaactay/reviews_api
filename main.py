@@ -21,6 +21,7 @@ def get_review_score(p_id: str):
     location_info = get_location_info(soup)
     token, total_reviews, local_reviews = get_reviews(soup)
     count = 1
+
     while token != "" and count < 10:
         url = create_url(p_id, token)
         soup = get_site(url)
@@ -28,8 +29,10 @@ def get_review_score(p_id: str):
         total_reviews += temp_total
         local_reviews += temp_local
         count += 1
+
     try:
         print(location_info['title'])
+        print("Total Reviews:", total_reviews, "Local Reviews: ", local_reviews)
     except:
         print('no title')
     return (local_reviews/total_reviews)*100
